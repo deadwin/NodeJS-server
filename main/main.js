@@ -1,7 +1,18 @@
 var http =require("http")
 var url = require("url")
-var express = require('./express');
+var express = require('../exp/node_modules/express');
 var app = express();
+
+//设置跨域访问
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("X-Powered-By",' 3.2.1')
+    res.header("Content-Type", "application/json;charset=utf-8");
+    console.log("设置成功");
+    next();
+});
 
 
 // http.createServer(function(request,response){
@@ -29,25 +40,35 @@ var app = express();
 //     console.log("server has started.");
 // }
 // exports.start = start;
+
 app.get('/',function(req,res){
     res.send("hello expr");
 })
 
+app.use(function(req, res, next) {
+
+    next();
+});
+
 app.get('/test',function(req,res){
     console.log("/test get 请求");
+    // res.header("Access-Control-Allow-Origin", "*");
+    // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     var params=url.parse(req.url,true).query;
     console.log(params);
     
     var response ={
-        "first_name":"nihao",
-        "last_name":"ok"
+        account:"id888",
+        sign:"sign",
+        roomid:20
     };
-    
 
 
     //res.send("test页面");
     //res.send("test页面结束");
     res.end(JSON.stringify(response));
+    // var jsonstr = JSON.stringify(response);
+	// res.send(jsonstr);
 })
 
 var server = app.listen(8856,function(){
